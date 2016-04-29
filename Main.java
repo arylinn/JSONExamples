@@ -9,84 +9,62 @@ import java.util.*;
  * Created by Amber on 4/28/2016.
  */
 
-class Forecast
+class Todo
 {
-    private String name;
-    private List<Double> forecast;
+    private String body;
+    private boolean done;
+    private int id;
+    private int priority;
+    private String title;
 
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public List<Double> getForecast() {
-//        return forecast;
-//    }
-//
-//    public void setForecast(List<Double> forecast) {
-//        this.forecast = forecast;
-//    }
-
-    @Override
     public String toString()
     {
-        List<String> forecastStrings = new ArrayList<>();
-        for(Double temp: forecast)
-        {
-            forecastStrings.add(temp.toString());
-        }
-        String forecastString = String.join(", ", forecastStrings);
-        return String.format("The forecast for %s: is %s", name, forecastString);
+        return (title + " " + body + " " + id + " " + priority + " " + done);
+
     }
 }
 
-class ForecastCollection extends ArrayList<Forecast>
+class todoCollection extends HashMap<String, Todo[]>
 {
 
 }
+
 public class Main {
     public static void main (String[] args)
     {
-        String jsonData = "[{\"name\": \"columbus\", \"forecast\": [40, 50, 65, 60, 70]},"
-                + "{\"name\": \"cleveland\", \"forecast\": [35, 55, 60, 45, 65]},"
-                + "{\"name\": \"cincinnati\", \"forecast\": [35, 60, 65, 45, 65]}]";
-
-//        JsonParser parser = new JsonParser();
-//        Forecast forecast = new Forecast();
-//
-//        JsonObject jsonObject = parser.parse(jsonData).getAsJsonObject();
-//
-//        for(Map.Entry<String, JsonElement> entry:jsonObject.entrySet())
-//        {
-//            if(entry.getValue().isJsonArray())
-//            {
-//                JsonArray jsonArray = entry.getValue().getAsJsonArray();
-//                List<Double> temps = new ArrayList<>();
-//
-//                for(JsonElement element: jsonArray)
-//                {
-//                    temps.add(element.getAsDouble());
-//                }
-//                forecast.setForecast(temps);
-//            }
-//            else
-//            {
-//                forecast.setName(entry.getValue().getAsString());
-//            }
-//
-//        }
-//        System.out.println(forecast);
+        String jsonData = "{\n" +
+                "  \"todos\": [\n" +
+                "    {\n" +
+                "      \"body\": \"Walk the dog\",\n" +
+                "      \"done\": false,\n" +
+                "      \"id\": 0,\n" +
+                "      \"priority\": 3,\n" +
+                "      \"title\": \"dog\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"body\": \"Pay the bills\",\n" +
+                "      \"done\": false,\n" +
+                "      \"id\": 1,\n" +
+                "      \"priority\": 1,\n" +
+                "      \"title\": \"bills\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
 
         Gson gson = new Gson();
-        ForecastCollection forecasts = gson.fromJson(jsonData, ForecastCollection.class);
-        for(Forecast forecast: forecasts)
+        todoCollection todos = gson.fromJson(jsonData, todoCollection.class);
+
+        for(String key: todos.keySet())
         {
-            System.out.println(forecast);
+            Todo[] todoArray = todos.get(key);
+            for(Todo todoitem: todoArray)
+            {
+                System.out.println(todoitem);
+            }
         }
-        String reserialized = gson.toJson(forecasts);
-        System.out.println(reserialized);
+
+        String reserialization = gson.toJson(todos);
+        System.out.println(reserialization);
+
     }
 }
